@@ -1,204 +1,272 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🍺 술 지출 역전 계산기 | 내 술값이 미래를 이겼다</title>
-  <meta name="description" content="한 달 술자리 횟수와 1회 지출만 입력하면, 지금까지 술값 총액과 투자했을 때의 금액(복리)을 바로 보여드립니다." />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🍺 술 지출 역전 계산기 | 내 술값이 미래를 이겼다</title>
+    <meta
+      name="description"
+      content="한 달 술자리 횟수와 1회 지출만 입력하면, 지금까지 술값 총액과 투자했을 때의 금액(복리)을 바로 보여드립니다."
+    />
 
-  <!-- OG -->
-  <meta property="og:title" content="🍺 술 지출 역전 계산기" />
-  <meta property="og:description" content="내 술값 총액 vs 투자했다면? 10초 만에 역전 수치 뽑기" />
-  <meta property="og:image" content="https://dummyimage.com/1200x630/0f172a/ffffff&text=%F0%9F%8D%BA%20%EC%88%A0%20%EC%A7%80%EC%B6%9C%20%EC%97%AD%EC%A0%84%20%EA%B3%84%EC%82%B0%EA%B8%B0" />
-  <meta property="og:image:alt" content="술 지출 역전 계산기 썸네일" />
-  <meta property="og:type" content="website" />
+    <!-- OG -->
+    <meta property="og:title" content="🍺 술 지출 역전 계산기" />
+    <meta
+      property="og:description"
+      content="내 술값 총액 vs 투자했다면? 10초 만에 역전 수치 뽑기"
+    />
+    <meta
+      property="og:image"
+      content="https://dummyimage.com/1200x630/0f172a/ffffff&text=%F0%9F%8D%BA%20%EC%88%A0%20%EC%A7%80%EC%B6%9C%20%EC%97%AD%EC%A0%84%20%EA%B3%84%EC%82%B0%EA%B8%B0"
+    />
+    <meta property="og:image:alt" content="술 지출 역전 계산기 썸네일" />
+    <meta property="og:type" content="website" />
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <style>
-    /* 살짝 더 예쁘게 */
-    .glass { background: rgba(255,255,255,.72); backdrop-filter: blur(10px); }
-  </style>
-</head>
+    <style>
+      /* 살짝 더 예쁘게 */
+      .glass {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(10px);
+      }
+    </style>
+  </head>
 
-<body class="min-h-screen bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-slate-100">
-  <main class="mx-auto max-w-3xl px-4 py-10">
-    <header class="mb-8">
-      <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm text-slate-200">
-        <span>🍺</span><span>재미용 · 참고용</span>
-      </div>
-      <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
-        술 지출 역전 계산기
-      </h1>
-      <p class="mt-2 text-slate-300">
-        “그때 그 술값”이 지금 내 통장과 싸우면… 누가 이길까?
-      </p>
-    </header>
-
-    <section class="glass rounded-3xl border border-white/10 p-5 shadow-xl shadow-black/20">
-      <div class="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label class="text-sm text-slate-700">한 달 술자리 횟수</label>
-          <input id="sessionsPerMonth" type="number" min="0" step="1" value="6"
-            class="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:ring-4 focus:ring-slate-200" />
-          <p class="mt-1 text-xs text-slate-500">예: 주 1~2회면 4~8회</p>
+  <body
+    class="min-h-screen bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-slate-100"
+  >
+    <main class="mx-auto max-w-3xl px-4 py-10">
+      <header class="mb-8">
+        <div
+          class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm text-slate-200"
+        >
+          <span>🍺</span><span>재미용 · 참고용</span>
         </div>
-
-        <div>
-          <label class="text-sm text-slate-700">1회 평균 지출(원)</label>
-          <input id="spendPerSession" type="number" min="0" step="1000" value="45000"
-            class="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:ring-4 focus:ring-slate-200" />
-          <p class="mt-1 text-xs text-slate-500">예: 3~7만원(2차 포함이면 더)</p>
-        </div>
-
-        <div>
-          <label class="text-sm text-slate-700">이 패턴 유지한 기간(년)</label>
-          <input id="years" type="number" min="0" step="0.5" value="3"
-            class="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:ring-4 focus:ring-slate-200" />
-          <p class="mt-1 text-xs text-slate-500">예: 1.5년처럼 반년도 가능</p>
-        </div>
-
-        <div>
-          <label class="text-sm text-slate-700">연 수익률(%) <span class="text-xs text-slate-500">(선택)</span></label>
-          <input id="annualRate" type="number" min="0" step="0.1" value="6"
-            class="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:ring-4 focus:ring-slate-200" />
-          <p class="mt-1 text-xs text-slate-500">0%면 “그냥 모았다면”</p>
-        </div>
-      </div>
-
-      <div class="mt-5 flex flex-col gap-3 sm:flex-row">
-        <button id="calcBtn"
-          class="w-full rounded-2xl bg-slate-900 px-5 py-3 font-semibold text-white shadow hover:opacity-95 sm:w-auto">
-          계산하기
-        </button>
-        <button id="randomBtn"
-          class="w-full rounded-2xl border border-slate-200 bg-white px-5 py-3 font-semibold text-slate-900 hover:bg-slate-50 sm:w-auto">
-          예시 랜덤
-        </button>
-        <button id="copyBtn"
-          class="w-full rounded-2xl border border-white/15 bg-white/10 px-5 py-3 font-semibold text-white hover:bg-white/15 sm:ml-auto sm:w-auto">
-          결과 문구 복사
-        </button>
-      </div>
-
-      <div class="mt-6 grid gap-4 sm:grid-cols-3">
-        <div class="rounded-2xl bg-white p-4 text-slate-900">
-          <p class="text-xs text-slate-500">총 술 지출</p>
-          <p id="totalSpent" class="mt-1 text-2xl font-extrabold">-</p>
-          <p id="spentSub" class="mt-1 text-xs text-slate-500"></p>
-        </div>
-        <div class="rounded-2xl bg-white p-4 text-slate-900">
-          <p class="text-xs text-slate-500">그 돈을 모았다면(0%)</p>
-          <p id="savedValue" class="mt-1 text-2xl font-extrabold">-</p>
-          <p class="mt-1 text-xs text-slate-500">원금 기준</p>
-        </div>
-        <div class="rounded-2xl bg-white p-4 text-slate-900">
-          <p class="text-xs text-slate-500">투자했다면(복리)</p>
-          <p id="futureValue" class="mt-1 text-2xl font-extrabold">-</p>
-          <p id="fvSub" class="mt-1 text-xs text-slate-500"></p>
-        </div>
-      </div>
-
-      <div class="mt-4 rounded-2xl border border-white/10 bg-white/10 p-4">
-        <p class="text-sm text-slate-200">📌 역전 멘트</p>
-        <p id="headline" class="mt-1 text-lg font-bold">계산해보면 여기 뜸</p>
-        <p id="detail" class="mt-1 text-sm text-slate-300"></p>
-      </div>
-
-      <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <button id="downloadCardBtn"
-          class="w-full rounded-2xl bg-white px-5 py-3 font-semibold text-slate-900 hover:bg-slate-50 sm:w-auto">
-          결과 카드 이미지 저장(PNG)
-        </button>
-        <p class="text-xs text-slate-400">
-          * 브라우저에서 로컬로 캡처 생성 (서버 불필요)
+        <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
+          술 지출 역전 계산기
+        </h1>
+        <p class="mt-2 text-slate-300">
+          “그때 그 술값”이 지금 내 통장과 싸우면… 누가 이길까?
         </p>
-      </div>
+      </header>
 
-      <!-- Hidden canvas -->
-      <canvas id="cardCanvas" class="hidden"></canvas>
-    </section>
+      <section
+        class="glass rounded-3xl border border-white/10 p-5 shadow-xl shadow-black/20"
+      >
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label class="text-sm text-slate-700">한 달 술자리 횟수</label>
+            <input
+              id="sessionsPerMonth"
+              type="number"
+              min="0"
+              step="1"
+              value="6"
+              class="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:ring-4 focus:ring-slate-200"
+            />
+            <p class="mt-1 text-xs text-slate-500">예: 주 1~2회면 4~8회</p>
+          </div>
 
-    <footer class="mt-10 text-center text-xs text-slate-500">
-      © <span id="yearNow"></span> • 재미용 계산 결과이며 실제 재무 의사결정의 근거로 사용하지 마세요.
-    </footer>
-  </main>
+          <div>
+            <label class="text-sm text-slate-700">1회 평균 지출(원)</label>
+            <input
+              id="spendPerSession"
+              type="number"
+              min="0"
+              step="1000"
+              value="45000"
+              class="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:ring-4 focus:ring-slate-200"
+            />
+            <p class="mt-1 text-xs text-slate-500">
+              예: 3~7만원(2차 포함이면 더)
+            </p>
+          </div>
 
-  <script>
-    const $ = (id) => document.getElementById(id);
+          <div>
+            <label class="text-sm text-slate-700"
+              >이 패턴 유지한 기간(년)</label
+            >
+            <input
+              id="years"
+              type="number"
+              min="0"
+              step="0.5"
+              value="3"
+              class="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:ring-4 focus:ring-slate-200"
+            />
+            <p class="mt-1 text-xs text-slate-500">예: 1.5년처럼 반년도 가능</p>
+          </div>
 
-    const fmtKRW = (n) => {
-      const x = Math.round(n);
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원";
-    };
+          <div>
+            <label class="text-sm text-slate-700"
+              >연 수익률(%)
+              <span class="text-xs text-slate-500">(선택)</span></label
+            >
+            <input
+              id="annualRate"
+              type="number"
+              min="0"
+              step="0.1"
+              value="6"
+              class="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:ring-4 focus:ring-slate-200"
+            />
+            <p class="mt-1 text-xs text-slate-500">0%면 “그냥 모았다면”</p>
+          </div>
+        </div>
 
-    const clampNonNeg = (v) => isFinite(v) ? Math.max(0, v) : 0;
+        <div class="mt-5 flex flex-col gap-3 sm:flex-row">
+          <button
+            id="calcBtn"
+            class="w-full rounded-2xl bg-slate-900 px-5 py-3 font-semibold text-white shadow hover:opacity-95 sm:w-auto"
+          >
+            계산하기
+          </button>
+          <button
+            id="randomBtn"
+            class="w-full rounded-2xl border border-slate-200 bg-white px-5 py-3 font-semibold text-slate-900 hover:bg-slate-50 sm:w-auto"
+          >
+            예시 랜덤
+          </button>
+          <button
+            id="copyBtn"
+            class="w-full rounded-2xl border border-white/15 bg-white/10 px-5 py-3 font-semibold text-white hover:bg-white/15 sm:ml-auto sm:w-auto"
+          >
+            결과 문구 복사
+          </button>
+        </div>
 
-    // 매달 일정 금액을 납입한다고 가정한 미래가치(FV)
-    // r = monthlyRate, n = months, pmt = monthlyPayment
-    // FV = pmt * (( (1+r)^n - 1 ) / r)  (r=0이면 pmt*n)
-    function futureValueOfAnnuity(pmt, monthlyRate, months) {
-      if (months <= 0) return 0;
-      if (monthlyRate <= 0) return pmt * months;
-      return pmt * ( (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate );
-    }
+        <div class="mt-6 grid gap-4 sm:grid-cols-3">
+          <div class="rounded-2xl bg-white p-4 text-slate-900">
+            <p class="text-xs text-slate-500">총 술 지출</p>
+            <p id="totalSpent" class="mt-1 text-2xl font-extrabold">-</p>
+            <p id="spentSub" class="mt-1 text-xs text-slate-500"></p>
+          </div>
+          <div class="rounded-2xl bg-white p-4 text-slate-900">
+            <p class="text-xs text-slate-500">그 돈을 모았다면(0%)</p>
+            <p id="savedValue" class="mt-1 text-2xl font-extrabold">-</p>
+            <p class="mt-1 text-xs text-slate-500">원금 기준</p>
+          </div>
+          <div class="rounded-2xl bg-white p-4 text-slate-900">
+            <p class="text-xs text-slate-500">투자했다면(복리)</p>
+            <p id="futureValue" class="mt-1 text-2xl font-extrabold">-</p>
+            <p id="fvSub" class="mt-1 text-xs text-slate-500"></p>
+          </div>
+        </div>
 
-    function calc() {
-      const sessionsPerMonth = clampNonNeg(parseFloat($("sessionsPerMonth").value));
-      const spendPerSession = clampNonNeg(parseFloat($("spendPerSession").value));
-      const years = clampNonNeg(parseFloat($("years").value));
-      const annualRatePct = clampNonNeg(parseFloat($("annualRate").value));
+        <div class="mt-4 rounded-2xl border border-white/10 bg-white/10 p-4">
+          <p class="text-sm text-slate-200">📌 역전 멘트</p>
+          <p id="headline" class="mt-1 text-lg font-bold">계산해보면 여기 뜸</p>
+          <p id="detail" class="mt-1 text-sm text-slate-300"></p>
+        </div>
 
-      const months = Math.round(years * 12);
-      const monthlySpend = sessionsPerMonth * spendPerSession;
-      const totalSpent = monthlySpend * months;
+        <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <button
+            id="downloadCardBtn"
+            class="w-full rounded-2xl bg-white px-5 py-3 font-semibold text-slate-900 hover:bg-slate-50 sm:w-auto"
+          >
+            결과 카드 이미지 저장(PNG)
+          </button>
+          <p class="text-xs text-slate-400">
+            * 브라우저에서 로컬로 캡처 생성 (서버 불필요)
+          </p>
+        </div>
 
-      const annualRate = annualRatePct / 100;
-      const monthlyRate = Math.pow(1 + annualRate, 1/12) - 1;
+        <!-- Hidden canvas -->
+        <canvas id="cardCanvas" class="hidden"></canvas>
+      </section>
 
-      const savedValue = totalSpent; // 0%면 그냥 쌓인 원금
-      const fv = futureValueOfAnnuity(monthlySpend, monthlyRate, months);
+      <footer class="mt-10 text-center text-xs text-slate-500">
+        © <span id="yearNow"></span> • 재미용 계산 결과이며 실제 재무 의사결정의
+        근거로 사용하지 마세요.
+      </footer>
+    </main>
 
-      $("totalSpent").textContent = fmtKRW(totalSpent);
-      $("savedValue").textContent = fmtKRW(savedValue);
-      $("futureValue").textContent = fmtKRW(fv);
+    <script>
+      const $ = (id) => document.getElementById(id);
 
-      $("spentSub").textContent = months > 0 ? `월 평균 ${fmtKRW(monthlySpend)} × ${months}개월` : "";
-      $("fvSub").textContent = months > 0 ? `연 ${annualRatePct}% 가정` : "";
+      const fmtKRW = (n) => {
+        const x = Math.round(n);
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원";
+      };
 
-      const diff = fv - totalSpent;
-      const diffText = diff >= 0 ? `(+${fmtKRW(diff)})` : `(${fmtKRW(diff)})`;
+      const clampNonNeg = (v) => (isFinite(v) ? Math.max(0, v) : 0);
 
-      // 멘트 생성
-      const ratio = totalSpent > 0 ? (fv / totalSpent) : 0;
-      let vibe;
-      if (months === 0 || monthlySpend === 0) {
-        vibe = "술값이 거의 없네… 이미 승자임 🍃";
-      } else if (annualRatePct === 0) {
-        vibe = "복리 없이도 꽤 큼. 숫자가 다 말해줌.";
-      } else if (ratio >= 1.35) {
-        vibe = "복리가 미쳤다… 술값이 미래를 뚫고 나감.";
-      } else if (ratio >= 1.15) {
-        vibe = "조금만 일찍 모았어도 꽤 달라졌을 듯.";
-      } else {
-        vibe = "수익률 낮게 잡으면 현실적으로 이 정도.";
+      // 매달 일정 금액을 납입한다고 가정한 미래가치(FV)
+      // r = monthlyRate, n = months, pmt = monthlyPayment
+      // FV = pmt * (( (1+r)^n - 1 ) / r)  (r=0이면 pmt*n)
+      function futureValueOfAnnuity(pmt, monthlyRate, months) {
+        if (months <= 0) return 0;
+        if (monthlyRate <= 0) return pmt * months;
+        return pmt * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
       }
 
-      const headline = months === 0
-        ? "값을 입력하면 결과가 나옵니다."
-        : `내 술값 총액 ${fmtKRW(totalSpent)} → 투자했다면 ${fmtKRW(fv)} ${diffText}`;
+      function calc() {
+        const sessionsPerMonth = clampNonNeg(
+          parseFloat($("sessionsPerMonth").value)
+        );
+        const spendPerSession = clampNonNeg(
+          parseFloat($("spendPerSession").value)
+        );
+        const years = clampNonNeg(parseFloat($("years").value));
+        const annualRatePct = clampNonNeg(parseFloat($("annualRate").value));
 
-      const detail = months === 0
-        ? ""
-        : `월 ${fmtKRW(monthlySpend)}를 ${months}개월 동안 썼다고 가정. ${vibe}`;
+        const months = Math.round(years * 12);
+        const monthlySpend = sessionsPerMonth * spendPerSession;
+        const totalSpent = monthlySpend * months;
 
-      $("headline").textContent = headline;
-      $("detail").textContent = detail;
+        const annualRate = annualRatePct / 100;
+        const monthlyRate = Math.pow(1 + annualRate, 1 / 12) - 1;
 
-      // 복사용 문구
-      const copyText =
-`🍺 술 지출 역전 계산기 결과
+        const savedValue = totalSpent; // 0%면 그냥 쌓인 원금
+        const fv = futureValueOfAnnuity(monthlySpend, monthlyRate, months);
+
+        $("totalSpent").textContent = fmtKRW(totalSpent);
+        $("savedValue").textContent = fmtKRW(savedValue);
+        $("futureValue").textContent = fmtKRW(fv);
+
+        $("spentSub").textContent =
+          months > 0 ? `월 평균 ${fmtKRW(monthlySpend)} × ${months}개월` : "";
+        $("fvSub").textContent = months > 0 ? `연 ${annualRatePct}% 가정` : "";
+
+        const diff = fv - totalSpent;
+        const diffText = diff >= 0 ? `(+${fmtKRW(diff)})` : `(${fmtKRW(diff)})`;
+
+        // 멘트 생성
+        const ratio = totalSpent > 0 ? fv / totalSpent : 0;
+        let vibe;
+        if (months === 0 || monthlySpend === 0) {
+          vibe = "술값이 거의 없네… 이미 승자임 🍃";
+        } else if (annualRatePct === 0) {
+          vibe = "복리 없이도 꽤 큼. 숫자가 다 말해줌.";
+        } else if (ratio >= 1.35) {
+          vibe = "복리가 미쳤다… 술값이 미래를 뚫고 나감.";
+        } else if (ratio >= 1.15) {
+          vibe = "조금만 일찍 모았어도 꽤 달라졌을 듯.";
+        } else {
+          vibe = "수익률 낮게 잡으면 현실적으로 이 정도.";
+        }
+
+        const headline =
+          months === 0
+            ? "값을 입력하면 결과가 나옵니다."
+            : `내 술값 총액 ${fmtKRW(totalSpent)} → 투자했다면 ${fmtKRW(
+                fv
+              )} ${diffText}`;
+
+        const detail =
+          months === 0
+            ? ""
+            : `월 ${fmtKRW(
+                monthlySpend
+              )}를 ${months}개월 동안 썼다고 가정. ${vibe}`;
+
+        $("headline").textContent = headline;
+        $("detail").textContent = detail;
+
+        // 복사용 문구
+        const copyText = `🍺 술 지출 역전 계산기 결과
 - 월 술자리: ${sessionsPerMonth}회
 - 1회 지출: ${fmtKRW(spendPerSession)}
 - 기간: ${years}년 (${months}개월)
@@ -206,160 +274,210 @@
 - 투자(연 ${annualRatePct}% 가정): ${fmtKRW(fv)}
 ${headline}`;
 
-      return { sessionsPerMonth, spendPerSession, years, months, annualRatePct, monthlySpend, totalSpent, fv, headline, detail, copyText };
-    }
-
-    function randomExample() {
-      const ex = [
-        { s: 4, p: 35000, y: 2, r: 5 },
-        { s: 8, p: 55000, y: 3, r: 7 },
-        { s: 12, p: 65000, y: 5, r: 6 },
-        { s: 2, p: 90000, y: 1.5, r: 4 },
-      ][Math.floor(Math.random() * 4)];
-
-      $("sessionsPerMonth").value = ex.s;
-      $("spendPerSession").value = ex.p;
-      $("years").value = ex.y;
-      $("annualRate").value = ex.r;
-      calc();
-    }
-
-    async function copyResult() {
-      const result = calc();
-      try {
-        await navigator.clipboard.writeText(result.copyText);
-        $("copyBtn").textContent = "복사 완료!";
-        setTimeout(() => $("copyBtn").textContent = "결과 문구 복사", 900);
-      } catch (e) {
-        alert("복사 실패 😭 브라우저 권한을 확인해줘.");
+        return {
+          sessionsPerMonth,
+          spendPerSession,
+          years,
+          months,
+          annualRatePct,
+          monthlySpend,
+          totalSpent,
+          fv,
+          headline,
+          detail,
+          copyText,
+        };
       }
-    }
 
-    function drawCardPNG(result) {
-      const canvas = $("cardCanvas");
-      const w = 1080, h = 1350;
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext("2d");
+      function randomExample() {
+        const ex = [
+          { s: 4, p: 35000, y: 2, r: 5 },
+          { s: 8, p: 55000, y: 3, r: 7 },
+          { s: 12, p: 65000, y: 5, r: 6 },
+          { s: 2, p: 90000, y: 1.5, r: 4 },
+        ][Math.floor(Math.random() * 4)];
 
-      // 배경 그라데이션
-      const g = ctx.createLinearGradient(0, 0, 0, h);
-      g.addColorStop(0, "#0f172a");
-      g.addColorStop(1, "#020617");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
+        $("sessionsPerMonth").value = ex.s;
+        $("spendPerSession").value = ex.p;
+        $("years").value = ex.y;
+        $("annualRate").value = ex.r;
+        calc();
+      }
 
-      // 카드 영역
-      const pad = 70;
-      const cardX = pad, cardY = pad, cardW = w - pad*2, cardH = h - pad*2;
-      ctx.fillStyle = "rgba(255,255,255,0.08)";
-      roundRect(ctx, cardX, cardY, cardW, cardH, 42, true, false);
-
-      // 텍스트
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 54px system-ui, -apple-system, Segoe UI, sans-serif";
-      ctx.fillText("🍺 술 지출 역전 계산기", cardX + 55, cardY + 110);
-
-      ctx.fillStyle = "rgba(255,255,255,0.85)";
-      ctx.font = "28px system-ui, -apple-system, Segoe UI, sans-serif";
-      wrapText(ctx, result.headline, cardX + 55, cardY + 175, cardW - 110, 42);
-
-      // 수치 박스 3개
-      const boxTop = cardY + 320;
-      const gap = 26;
-      const boxW = (cardW - gap*2 - 110) / 3;
-      const boxH = 190;
-      const startX = cardX + 55;
-
-      const boxes = [
-        { t: "총 술 지출", v: fmtKRW(result.totalSpent) },
-        { t: "그냥 모았다면(0%)", v: fmtKRW(result.totalSpent) },
-        { t: `투자했다면(연 ${result.annualRatePct}%)`, v: fmtKRW(result.fv) },
-      ];
-
-      boxes.forEach((b, i) => {
-        const x = startX + i*(boxW + gap);
-        ctx.fillStyle = "rgba(255,255,255,0.10)";
-        roundRect(ctx, x, boxTop, boxW, boxH, 28, true, false);
-
-        ctx.fillStyle = "rgba(255,255,255,0.75)";
-        ctx.font = "22px system-ui, -apple-system, Segoe UI, sans-serif";
-        ctx.fillText(b.t, x + 26, boxTop + 50);
-
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 34px system-ui, -apple-system, Segoe UI, sans-serif";
-        ctx.fillText(b.v, x + 26, boxTop + 105);
-      });
-
-      // 상세
-      ctx.fillStyle = "rgba(255,255,255,0.85)";
-      ctx.font = "26px system-ui, -apple-system, Segoe UI, sans-serif";
-      wrapText(ctx, `월 평균 술값: ${fmtKRW(result.monthlySpend)} · 기간: ${result.months}개월`, cardX + 55, boxTop + boxH + 80, cardW - 110, 40);
-
-      ctx.fillStyle = "rgba(255,255,255,0.72)";
-      ctx.font = "24px system-ui, -apple-system, Segoe UI, sans-serif";
-      wrapText(ctx, result.detail, cardX + 55, boxTop + boxH + 150, cardW - 110, 38);
-
-      // 하단 워터마크
-      ctx.fillStyle = "rgba(255,255,255,0.45)";
-      ctx.font = "22px system-ui, -apple-system, Segoe UI, sans-serif";
-      ctx.fillText("funnyfunny.cloud", cardX + 55, cardY + cardH - 55);
-
-      // 다운로드
-      const url = canvas.toDataURL("image/png");
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "alcohol-spend-card.png";
-      a.click();
-    }
-
-    function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
-      const r = typeof radius === "number" ? {tl: radius, tr: radius, br: radius, bl: radius} : radius;
-      ctx.beginPath();
-      ctx.moveTo(x + r.tl, y);
-      ctx.lineTo(x + width - r.tr, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + r.tr);
-      ctx.lineTo(x + width, y + height - r.br);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - r.br, y + height);
-      ctx.lineTo(x + r.bl, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - r.bl);
-      ctx.lineTo(x, y + r.tl);
-      ctx.quadraticCurveTo(x, y, x + r.tl, y);
-      ctx.closePath();
-      if (fill) ctx.fill();
-      if (stroke) ctx.stroke();
-    }
-
-    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-      const words = String(text).split(" ");
-      let line = "";
-      let yy = y;
-      for (let i = 0; i < words.length; i++) {
-        const test = line + words[i] + " ";
-        const w = ctx.measureText(test).width;
-        if (w > maxWidth && i > 0) {
-          ctx.fillText(line.trim(), x, yy);
-          line = words[i] + " ";
-          yy += lineHeight;
-        } else {
-          line = test;
+      async function copyResult() {
+        const result = calc();
+        try {
+          await navigator.clipboard.writeText(result.copyText);
+          $("copyBtn").textContent = "복사 완료!";
+          setTimeout(() => ($("copyBtn").textContent = "결과 문구 복사"), 900);
+        } catch (e) {
+          alert("복사 실패 😭 브라우저 권한을 확인해줘.");
         }
       }
-      if (line.trim()) ctx.fillText(line.trim(), x, yy);
-    }
 
-    // events
-    $("calcBtn").addEventListener("click", () => calc());
-    $("randomBtn").addEventListener("click", () => randomExample());
-    $("copyBtn").addEventListener("click", () => copyResult());
-    $("downloadCardBtn").addEventListener("click", () => {
-      const result = calc();
-      drawCardPNG(result);
-    });
+      function drawCardPNG(result) {
+        const canvas = $("cardCanvas");
+        const w = 1080,
+          h = 1350;
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
 
-    // init
-    $("yearNow").textContent = new Date().getFullYear();
-    calc();
-  </script>
-</body>
+        // 배경 그라데이션
+        const g = ctx.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, "#0f172a");
+        g.addColorStop(1, "#020617");
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, w, h);
+
+        // 카드 영역
+        const pad = 70;
+        const cardX = pad,
+          cardY = pad,
+          cardW = w - pad * 2,
+          cardH = h - pad * 2;
+        ctx.fillStyle = "rgba(255,255,255,0.08)";
+        roundRect(ctx, cardX, cardY, cardW, cardH, 42, true, false);
+
+        // 텍스트
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 54px system-ui, -apple-system, Segoe UI, sans-serif";
+        ctx.fillText("🍺 술 지출 역전 계산기", cardX + 55, cardY + 110);
+
+        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.font = "28px system-ui, -apple-system, Segoe UI, sans-serif";
+        wrapText(
+          ctx,
+          result.headline,
+          cardX + 55,
+          cardY + 175,
+          cardW - 110,
+          42
+        );
+
+        // 수치 박스 3개
+        const boxTop = cardY + 320;
+        const gap = 26;
+        const boxW = (cardW - gap * 2 - 110) / 3;
+        const boxH = 190;
+        const startX = cardX + 55;
+
+        const boxes = [
+          { t: "총 술 지출", v: fmtKRW(result.totalSpent) },
+          { t: "그냥 모았다면(0%)", v: fmtKRW(result.totalSpent) },
+          {
+            t: `투자했다면(연 ${result.annualRatePct}%)`,
+            v: fmtKRW(result.fv),
+          },
+        ];
+
+        boxes.forEach((b, i) => {
+          const x = startX + i * (boxW + gap);
+          ctx.fillStyle = "rgba(255,255,255,0.10)";
+          roundRect(ctx, x, boxTop, boxW, boxH, 28, true, false);
+
+          ctx.fillStyle = "rgba(255,255,255,0.75)";
+          ctx.font = "22px system-ui, -apple-system, Segoe UI, sans-serif";
+          ctx.fillText(b.t, x + 26, boxTop + 50);
+
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 34px system-ui, -apple-system, Segoe UI, sans-serif";
+          ctx.fillText(b.v, x + 26, boxTop + 105);
+        });
+
+        // 상세
+        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.font = "26px system-ui, -apple-system, Segoe UI, sans-serif";
+        wrapText(
+          ctx,
+          `월 평균 술값: ${fmtKRW(result.monthlySpend)} · 기간: ${
+            result.months
+          }개월`,
+          cardX + 55,
+          boxTop + boxH + 80,
+          cardW - 110,
+          40
+        );
+
+        ctx.fillStyle = "rgba(255,255,255,0.72)";
+        ctx.font = "24px system-ui, -apple-system, Segoe UI, sans-serif";
+        wrapText(
+          ctx,
+          result.detail,
+          cardX + 55,
+          boxTop + boxH + 150,
+          cardW - 110,
+          38
+        );
+
+        // 하단 워터마크
+        ctx.fillStyle = "rgba(255,255,255,0.45)";
+        ctx.font = "22px system-ui, -apple-system, Segoe UI, sans-serif";
+        ctx.fillText("funnyfunny.cloud", cardX + 55, cardY + cardH - 55);
+
+        // 다운로드
+        const url = canvas.toDataURL("image/png");
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "alcohol-spend-card.png";
+        a.click();
+      }
+
+      function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+        const r =
+          typeof radius === "number"
+            ? { tl: radius, tr: radius, br: radius, bl: radius }
+            : radius;
+        ctx.beginPath();
+        ctx.moveTo(x + r.tl, y);
+        ctx.lineTo(x + width - r.tr, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + r.tr);
+        ctx.lineTo(x + width, y + height - r.br);
+        ctx.quadraticCurveTo(
+          x + width,
+          y + height,
+          x + width - r.br,
+          y + height
+        );
+        ctx.lineTo(x + r.bl, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - r.bl);
+        ctx.lineTo(x, y + r.tl);
+        ctx.quadraticCurveTo(x, y, x + r.tl, y);
+        ctx.closePath();
+        if (fill) ctx.fill();
+        if (stroke) ctx.stroke();
+      }
+
+      function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+        const words = String(text).split(" ");
+        let line = "";
+        let yy = y;
+        for (let i = 0; i < words.length; i++) {
+          const test = line + words[i] + " ";
+          const w = ctx.measureText(test).width;
+          if (w > maxWidth && i > 0) {
+            ctx.fillText(line.trim(), x, yy);
+            line = words[i] + " ";
+            yy += lineHeight;
+          } else {
+            line = test;
+          }
+        }
+        if (line.trim()) ctx.fillText(line.trim(), x, yy);
+      }
+
+      // events
+      $("calcBtn").addEventListener("click", () => calc());
+      $("randomBtn").addEventListener("click", () => randomExample());
+      $("copyBtn").addEventListener("click", () => copyResult());
+      $("downloadCardBtn").addEventListener("click", () => {
+        const result = calc();
+        drawCardPNG(result);
+      });
+
+      // init
+      $("yearNow").textContent = new Date().getFullYear();
+      calc();
+    </script>
+  </body>
 </html>
